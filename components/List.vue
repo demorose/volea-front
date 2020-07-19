@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-300 m-6 p-3">
-    <OwnItem v-for="item in items" :key="item.id" v-bind:item="item" />
+    <OwnItem v-for="item in items" :key="item.id" :item="item" />
     <ItemForm />
   </div>
 </template>
@@ -15,12 +15,12 @@ export default {
     OwnItem,
     ItemForm
   },
+  async fetch() {
+    await this.$store.dispatch('items/GET_FOR_USER', this.currentUser.pk)
+  },
   computed: mapGetters({
     items: 'items/LIST',
     currentUser: 'loggedInUser'
-  }),
-  async fetch() {
-    await this.$store.dispatch('items/GET_FOR_USER', this.currentUser.pk)
-  }
+  })
 }
 </script>
