@@ -1,9 +1,7 @@
 <template>
   <div class="bg-gray-300 m-6 p-3">
-    <p v-if="$fetchState.pending">Fetching posts...</p>
     <OwnItem v-for="item in items" :key="item.id" v-bind:item="item" />
     <ItemForm />
-    <button @click="$fetch">Refresh</button>
   </div>
 </template>
 
@@ -17,19 +15,12 @@ export default {
     OwnItem,
     ItemForm
   },
-  computed: {
-    ...mapGetters(['loggedInUser'])
-  },
-  data() {
-    return {
-      items: []
-    }
-  },
+  computed: mapGetters({
+    items: 'items/LIST',
+    currentUser: 'loggedInUser'
+  }),
   async fetch() {
-    console.log(this.loggedInUser)
-    this.items = (
-      await this.$axios.get(`/items/?owner__id=${this.loggedInUser.pk}`)
-    ).data
+    await this.$store.dispatch('items/GET_FOR_USER', this.currentUser.pk)
   }
 }
 </script>

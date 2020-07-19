@@ -37,10 +37,14 @@ export default {
     async submit(e) {
       try {
         this.errors = {}
-        await this.$axios.post('/items/', this.formData)
+        await this.$axios.post('/items/', this.formData).then((response) => {
+          this.$store.commit('items/ADD', response.data)
+        })
       } catch (e) {
-        this.errors = {
-          ...e.response.data
+        if (e.response) {
+          this.errors = {
+            ...e.response.data
+          }
         }
       }
     }
